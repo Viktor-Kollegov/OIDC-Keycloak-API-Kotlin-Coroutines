@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Result</title>
+</head>
+<body>
+<h1>Result</h1>
+<p th:if="${response != null}" th:text="${response}">No response available</p>
+<p th:if="${response == null}">An unexpected error occurred.</p>
+<a th:href="@{/login}">Back to Login</a>
+</body>
+</html>

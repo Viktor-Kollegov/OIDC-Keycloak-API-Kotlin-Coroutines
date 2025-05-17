@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registration Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            text-align: center;
+            padding-top: 50px;
+        }
+        .box {
+            display: inline-block;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px #ccc;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1>Registration Successful</h1>
+    <p>You can now <a th:href="@{/login}">log in</a> using your credentials.</p>
+</div>
+</body>
+</html>

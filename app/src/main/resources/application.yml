@@ -1,0 +1,34 @@
+logging:
+  level:
+    org.springframework.security: trace
+
+server:
+  port: 8082
+
+#spring:
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          api-client-login:
+#            provider: spring
+#            client-id: api-client
+#            client-secret: secret
+#            authorization-grant-type: password
+#            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
+#            scope: api.read
+#            client-name: api-client-login
+#
+#          api-client-programmatic:
+#            provider: spring
+#            client-id: api-client
+#            client-secret: secret
+#            authorization-grant-type: authorization_code
+#            redirect-uri: "http://127.0.0.1:8080/authorized"
+#            scope: api.read
+#            client-name: api-client-programmatic
+#
+#        provider:
+#          spring:
+#            authorization-uri: http://127.0.0.1:9000/oauth2/authorize
+#            token-uri: http://127.0.0.1:9000/oauth2/token

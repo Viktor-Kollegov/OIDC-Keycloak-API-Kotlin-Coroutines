@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>OAuth2 Error</title>
+</head>
+<body>
+<h1>OAuth2 Error</h1>
+<p th:if="${error != null}" th:text="'Error: ' + ${error}">Error: none</p>
+<p th:if="${error_description != null}" th:text="'Description: ' + ${error_description}">Description: none</p>
+<p th:if="${error == null and error_description == null}">An unexpected error occurred.</p>
+<a th:href="@{/login}">Try again</a>
+</body>
+</html>
