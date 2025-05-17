@@ -18,6 +18,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 
 import javax.sql.DataSource;
 
+
 @Configuration
 @EnableWebSecurity
 @Slf4j
@@ -29,7 +30,10 @@ public class SecurityConfig {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/oauth2/token", "/oauth2/authorize", "/oauth2/jwks"))
+                        .ignoringRequestMatchers(
+                                "/oauth2/token",
+                                "/oauth2/authorize",
+                                "/oauth2/jwks"))
                 .exceptionHandling(exceptions -> exceptions
                         .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")));
 
@@ -46,7 +50,11 @@ public class SecurityConfig {
         });
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/register", "/register-success", "/h2-console/**", "/login", "/error").permitAll()
+                        .requestMatchers("/register",
+                                "/register-success",
+                                "/h2-console/**",
+                                "/login",
+                                "/error").permitAll()
                         .anyRequest().authenticated())
                 .formLogin(Customizer.withDefaults())
                 .requestCache(cache -> cache

@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 public class RegistrationController {
 
     private final RestTemplate restTemplate;
-    private final String registrationEndpoint = "http://localhost:9000/register";
+    private final String registrationEndpoint = "http://127.0.0.1:9000/register";
 
     public RegistrationController(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;

@@ -18,7 +18,7 @@ public class ResourceServerConfig {
                         .anyRequest().permitAll())
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> jwt
-                                .jwkSetUri("http://localhost:9000/oauth2/jwks")));
+                                .jwkSetUri("http://127.0.0.1:9000/oauth2/jwks")));
         return http.build();
     }
 

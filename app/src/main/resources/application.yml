@@ -1,34 +1,35 @@
 logging:
   level:
-    org.springframework.security: trace
+    org.springframework.security: TRACE
+    org.springframework.web: DEBUG
+    org.springframework.session: TRACE
+    org.springframework.security.oauth2: TRACE
+    org.springframework.security.web.session: TRACE
 
 server:
   port: 8082
+  servlet:
+    session:
+      timeout: 60m
+      cookie:
+        http-only: true
+        secure: true
+        same-site: lax
+        name: JSESSI0NID
 
-#spring:
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          api-client-login:
-#            provider: spring
-#            client-id: api-client
-#            client-secret: secret
-#            authorization-grant-type: password
-#            redirect-uri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
-#            scope: api.read
-#            client-name: api-client-login
-#
-#          api-client-programmatic:
-#            provider: spring
-#            client-id: api-client
-#            client-secret: secret
-#            authorization-grant-type: authorization_code
-#            redirect-uri: "http://127.0.0.1:8080/authorized"
-#            scope: api.read
-#            client-name: api-client-programmatic
-#
-#        provider:
-#          spring:
-#            authorization-uri: http://127.0.0.1:9000/oauth2/authorize
-#            token-uri: http://127.0.0.1:9000/oauth2/token
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          transactions-api:
+            client-id: client-app1
+            client-authentication-method: none
+            authorization-grant-type: authorization_code
+            redirect-uri: "http://127.0.0.1:8082/login/oauth2/code/transactions-api"
+            scope: read,write
+            client-name: Custom Auth Client
+        provider:
+          transactions-api:
+            authorization-uri: http://127.0.0.1:9000/oauth2/authorize
+            token-uri: http://127.0.0.1:9000/oauth2/token
