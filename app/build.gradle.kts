@@ -12,5 +12,5 @@ dependencies {
 
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
-    implementation(project(mapOf("path" to ":model")))
+    implementation(project(mapOf("path" to ":common")))
 }

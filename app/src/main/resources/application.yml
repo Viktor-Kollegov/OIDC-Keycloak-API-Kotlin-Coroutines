@@ -1,22 +1,3 @@
-logging:
-  level:
-    org.springframework.security: TRACE
-    org.springframework.web: DEBUG
-    org.springframework.session: TRACE
-    org.springframework.security.oauth2: TRACE
-    org.springframework.security.web.session: TRACE
-
-server:
-  port: 8082
-  servlet:
-    session:
-      timeout: 60m
-      cookie:
-        http-only: true
-        secure: true
-        same-site: lax
-        name: JSESSI0NID
-
 spring:
   security:
     oauth2:
@@ -33,3 +14,18 @@ spring:
           transactions-api:
             authorization-uri: http://127.0.0.1:9000/oauth2/authorize
             token-uri: http://127.0.0.1:9000/oauth2/token
+server:
+  port: 8082
+  servlet:
+    session:
+      timeout: 60m
+      cookie:
+        http-only: true
+        secure: true
+        same-site: lax
+        name: JSESSI0NID
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.session: DEBUG

@@ -14,5 +14,5 @@ dependencies {
     runtimeOnly("com.h2database:h2:2.2.224")
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
-    implementation(project(mapOf("path" to ":model")))
+    implementation(project(mapOf("path" to ":common")))
 }
