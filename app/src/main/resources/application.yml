@@ -9,7 +9,7 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "http://127.0.0.1:8082/login/oauth2/code/transactions-api"
             scope: read,write
-            client-name: Custom Auth Client
+            client-name: Transactions API Client
         provider:
           transactions-api:
             authorization-uri: http://127.0.0.1:9000/oauth2/authorize
@@ -23,7 +23,7 @@ server:
         http-only: true
         secure: true
         same-site: lax
-        name: JSESSI0NID
+        name: CLIENT_JSESSIONID
 logging:
   level:
     org.springframework.security: DEBUG

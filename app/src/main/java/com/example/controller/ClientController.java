@@ -14,6 +14,8 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +71,8 @@ public class ClientController {
                     Void.class);
             return "redirect:/protected";
         } catch (Exception e) {
-            return "redirect:/error?message=" + e.getMessage();
+            String encodedMessage = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+            return "redirect:/error?message=" + encodedMessage;
         }
     }
 
@@ -91,7 +94,8 @@ public class ClientController {
                     Void.class);
             return "redirect:/protected";
         } catch (Exception e) {
-            return "redirect:/error?message=" + e.getMessage();
+            String encodedMessage = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+            return "redirect:/error?message=" + encodedMessage;
         }
     }
 
@@ -113,7 +117,8 @@ public class ClientController {
                     Void.class);
             return "redirect:/protected";
         } catch (Exception e) {
-            return "redirect:/error?message=" + e.getMessage();
+            String encodedMessage = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
+            return "redirect:/error?message=" + encodedMessage;
         }
     }
 

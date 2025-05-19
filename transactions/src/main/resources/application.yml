@@ -11,3 +11,8 @@
     change-log: classpath:db/changelog/db.changelog-master.yaml
  server:
    port: 8081
+ logging:
+   level:
+     org.springframework.security: DEBUG
+     org.springframework.web: DEBUG
+     org.springframework.session: DEBUG
