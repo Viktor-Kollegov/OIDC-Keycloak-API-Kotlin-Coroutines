@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,9 +20,10 @@ import org.springframework.web.client.RestTemplate;
 public class RegistrationController {
 
     private final RestTemplate restTemplate;
-    private final String registrationEndpoint = "http://127.0.0.1:9000/register";
+    private final String registrationEndpoint;
 
-    public RegistrationController(RestTemplate restTemplate) {
+    public RegistrationController(RestTemplate restTemplate, @Value("${auth.server.url}/register") String registrationEndpoint) {
+        this.registrationEndpoint = registrationEndpoint;
         this.restTemplate = restTemplate;
     }
 

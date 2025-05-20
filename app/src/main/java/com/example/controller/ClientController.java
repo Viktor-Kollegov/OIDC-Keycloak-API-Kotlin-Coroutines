@@ -31,7 +31,7 @@ public class ClientController {
     private final String resourceServerUrl;
 
     public ClientController(RestTemplate restTemplate,
-                            @Value("${resource.server.url:http://127.0.0.1:8081}") String resourceServerUrl) {
+                            @Value("${resource.server.url}") String resourceServerUrl) {
         this.restTemplate = restTemplate;
         this.resourceServerUrl = resourceServerUrl;
     }

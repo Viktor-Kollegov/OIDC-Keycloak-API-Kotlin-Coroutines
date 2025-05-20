@@ -1,0 +1,2 @@
+CREATE DATABASE resourcedb;
+CREATE DATABASE authdb;

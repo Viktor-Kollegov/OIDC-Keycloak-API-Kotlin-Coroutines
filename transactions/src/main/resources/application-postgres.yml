@@ -1,23 +1,19 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      settings:
-        web-allow-others: true
+    url: jdbc:postgresql://postgres:5432/resourcedb
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 server:
-  port: 9000
+  port: 8081
 logging:
   level:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
     org.springframework.session: DEBUG
 
-client:
-  url: http://127.0.0.1:8082
+auth:
+  server:
+    url: http://auth-server:9000

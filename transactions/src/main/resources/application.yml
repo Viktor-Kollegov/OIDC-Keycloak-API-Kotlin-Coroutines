@@ -16,3 +16,7 @@
      org.springframework.security: DEBUG
      org.springframework.web: DEBUG
      org.springframework.session: DEBUG
+
+ auth:
+   server:
+     url: http://127.0.0.1:9000

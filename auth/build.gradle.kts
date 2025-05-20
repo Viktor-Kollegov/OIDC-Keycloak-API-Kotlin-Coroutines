@@ -15,4 +15,5 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     implementation(project(mapOf("path" to ":common")))
+    implementation("org.postgresql:postgresql:42.7.2")
 }

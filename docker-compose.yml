@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   client:
+    container_name: client
     build:
       context: ./app
       dockerfile: Dockerfile
@@ -10,10 +11,14 @@ services:
     depends_on:
       - resource-server
       - auth-server
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=postgres
     networks:
       - app-network
 
   resource-server:
+    container_name: resource-server
     build:
       context: ./transactions
       dockerfile: Dockerfile
@@ -21,22 +26,42 @@ services:
       - "8081:8081"
     depends_on:
       - auth-server
+      - postgres
+    environment:
+      - SPRING_PROFILES_ACTIVE=postgres
     networks:
       - app-network
 
   auth-server:
+    container_name: auth-server
     build:
       context: ./auth
       dockerfile: Dockerfile
     ports:
       - "9000:9000"
-      - "9001:8080"
+    depends_on:
+      - postgres
     environment:
-      - SPRING_H2_CONSOLE_ENABLED=true
-      - SPRING_H2_CONSOLE_SETTINGS_WEB_ALLOW_OTHERS=true
+      - SPRING_PROFILES_ACTIVE=postgres
+    networks:
+      - app-network
+
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - app-network
 
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  postgres-data:

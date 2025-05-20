@@ -1,5 +1,6 @@
 package com.example.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,6 +20,12 @@ import java.util.UUID;
 @Configuration
 public class AuthorizationServerConfig {
 
+    private final String clientUrl;
+
+    public AuthorizationServerConfig(@Value("${client.url}") String clientUrl) {
+        this.clientUrl = clientUrl;
+    }
+
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
         RegisteredClient registeredClient = RegisteredClient.withId(UUID.nameUUIDFromBytes("client-app1".getBytes()).toString())
@@ -26,7 +33,7 @@ public class AuthorizationServerConfig {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:8082/login/oauth2/code/transactions-api")
+                .redirectUri(clientUrl + "/login/oauth2/code/transactions-api")
                 .scope("read")
                 .scope("write")
                 .clientSettings(ClientSettings.builder()
