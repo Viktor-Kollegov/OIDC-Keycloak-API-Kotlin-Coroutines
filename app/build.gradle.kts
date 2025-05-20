@@ -13,4 +13,5 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     implementation(project(mapOf("path" to ":common")))
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 }

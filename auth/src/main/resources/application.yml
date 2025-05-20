@@ -7,6 +7,8 @@ spring:
   h2:
     console:
       enabled: true
+      settings:
+        web-allow-others: true
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 server:
@@ -16,3 +18,4 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
     org.springframework.session: DEBUG
+

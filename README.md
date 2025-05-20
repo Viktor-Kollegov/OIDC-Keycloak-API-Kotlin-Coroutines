@@ -1,6 +1,10 @@
 ## PKCE OAuth 2.0 Transactions API
 
-:bootRunAll to start services
+Список и описание эндпоинтов:
+ 1) Сервера ресурсов http://127.0.0.1:8081/swagger-ui/index.html
+ 2) Клиентской части http://127.0.0.1:8082/swagger-ui/index.html
+
+Для запуска всех трёх приложений в консоли :bootRunAll
 
 
 

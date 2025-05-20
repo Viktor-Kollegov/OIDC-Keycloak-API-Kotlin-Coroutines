@@ -1,5 +1,9 @@
 package com.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -33,6 +37,11 @@ public class ClientController {
     }
 
     @GetMapping("/protected")
+    @Operation(summary = "Получить список счетов", description = "Возвращает список всех счетов пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Список счетов успешно получен"),
+            @ApiResponse(responseCode = "500", description = "Ошибка сервера")
+    })
     public ModelAndView protectedPage(@RegisteredOAuth2AuthorizedClient("transactions-api") OAuth2AuthorizedClient authorizedClient) {
         String accessToken = authorizedClient.getAccessToken().getTokenValue();
         HttpHeaders headers = new HttpHeaders();
@@ -46,6 +55,7 @@ public class ClientController {
             mav.addObject("accounts", accounts);
             return mav;
         } catch (Exception e) {
+            log.error("Exception in protectedPage: {}", e.getMessage(), e);
             ModelAndView mav = new ModelAndView("error");
             mav.addObject("error", "Не удалось получить счета: " + e.getMessage());
             return mav;
@@ -53,10 +63,16 @@ public class ClientController {
     }
 
     @PostMapping("/create-account")
+    @Operation(summary = "Создать новый счёт", description = "Создаёт счёт с указанной валютой")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "302", description = "Перенаправление на /protected после успешного создания"),
+            @ApiResponse(responseCode = "500", description = "Ошибка сервера")
+    })
     public String createAccount(
-            @RequestParam String currency,
+            @Parameter(description = "Валюта счёта (USD, EUR, RUB)", required = true) @RequestParam String currency,
             @RegisteredOAuth2AuthorizedClient("transactions-api") OAuth2AuthorizedClient authorizedClient) {
         String accessToken = authorizedClient.getAccessToken().getTokenValue();
+        log.info("Access Token for create-account: {}", accessToken);
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -71,15 +87,20 @@ public class ClientController {
                     Void.class);
             return "redirect:/protected";
         } catch (Exception e) {
-            String encodedMessage = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
-            return "redirect:/error?message=" + encodedMessage;
+            log.error("Exception in createAccount: {}", e.getMessage(), e);
+            return "redirect:/error?message=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
         }
     }
 
     @PostMapping("/deposit")
+    @Operation(summary = "Пополнить счёт", description = "Добавляет указанную сумму на счёт")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "302", description = "Перенаправление на /protected после успешного пополнения"),
+            @ApiResponse(responseCode = "500", description = "Ошибка сервера")
+    })
     public String deposit(
-            @RequestParam Long accountId,
-            @RequestParam BigDecimal amount,
+            @Parameter(description = "ID счёта", required = true) @RequestParam Long accountId,
+            @Parameter(description = "Сумма для пополнения", required = true) @RequestParam BigDecimal amount,
             @RegisteredOAuth2AuthorizedClient("transactions-api") OAuth2AuthorizedClient authorizedClient) {
         String accessToken = authorizedClient.getAccessToken().getTokenValue();
         HttpHeaders headers = new HttpHeaders();
@@ -94,15 +115,20 @@ public class ClientController {
                     Void.class);
             return "redirect:/protected";
         } catch (Exception e) {
-            String encodedMessage = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
-            return "redirect:/error?message=" + encodedMessage;
+            log.error("Exception in deposit: {}", e.getMessage(), e);
+            return "redirect:/error?message=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
         }
     }
 
     @PostMapping("/withdraw")
+    @Operation(summary = "Снять средства со счёта", description = "Снимает указанную сумму со счёта")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "302", description = "Перенаправление на /protected после успешного снятия"),
+            @ApiResponse(responseCode = "500", description = "Ошибка сервера")
+    })
     public String withdraw(
-            @RequestParam Long accountId,
-            @RequestParam BigDecimal amount,
+            @Parameter(description = "ID счёта", required = true) @RequestParam Long accountId,
+            @Parameter(description = "Сумма для снятия", required = true) @RequestParam BigDecimal amount,
             @RegisteredOAuth2AuthorizedClient("transactions-api") OAuth2AuthorizedClient authorizedClient) {
         String accessToken = authorizedClient.getAccessToken().getTokenValue();
         HttpHeaders headers = new HttpHeaders();
@@ -117,14 +143,19 @@ public class ClientController {
                     Void.class);
             return "redirect:/protected";
         } catch (Exception e) {
-            String encodedMessage = URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
-            return "redirect:/error?message=" + encodedMessage;
+            log.error("Exception in withdraw: {}", e.getMessage(), e);
+            return "redirect:/error?message=" + URLEncoder.encode(e.getMessage(), StandardCharsets.UTF_8);
         }
     }
 
     @GetMapping("/balance")
+    @Operation(summary = "Получить баланс счёта", description = "Возвращает текущий баланс и валюту счёта")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Баланс успешно получен"),
+            @ApiResponse(responseCode = "500", description = "Ошибка сервера")
+    })
     public ModelAndView getBalance(
-            @RequestParam Long accountId,
+            @Parameter(description = "ID счёта", required = true) @RequestParam Long accountId,
             @RegisteredOAuth2AuthorizedClient("transactions-api") OAuth2AuthorizedClient authorizedClient) {
         String accessToken = authorizedClient.getAccessToken().getTokenValue();
         HttpHeaders headers = new HttpHeaders();
@@ -145,10 +176,10 @@ public class ClientController {
             mav.addObject("currency", currency);
             return mav;
         } catch (Exception e) {
+            log.error("Exception in getBalance: {}", e.getMessage(), e);
             ModelAndView mav = new ModelAndView("error");
             mav.addObject("error", "Не удалось получить баланс: " + e.getMessage());
             return mav;
         }
     }
-
 }

@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  client:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    depends_on:
+      - resource-server
+      - auth-server
+    networks:
+      - app-network
+
+  resource-server:
+    build:
+      context: ./transactions
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    depends_on:
+      - auth-server
+    networks:
+      - app-network
+
+  auth-server:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+      - "9001:8080"
+    environment:
+      - SPRING_H2_CONSOLE_ENABLED=true
+      - SPRING_H2_CONSOLE_SETTINGS_WEB_ALLOW_OTHERS=true
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

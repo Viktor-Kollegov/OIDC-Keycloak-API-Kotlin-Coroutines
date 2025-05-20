@@ -1,6 +1,9 @@
 package com.example.controller;
 
 import com.example.dto.RegistrationRequest;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -28,6 +31,11 @@ public class RegistrationController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Регистрация нового пользователя", description = "Создаёт новый аккаунт пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "302", description = "Перенаправление на /register-success после успешной регистрации"),
+            @ApiResponse(responseCode = "500", description = "Перенаправление на /register-error после ошибки регистрации")
+    })
     public String register(@RequestBody RegistrationRequest request) {
         try {
             HttpHeaders headers = new HttpHeaders();
