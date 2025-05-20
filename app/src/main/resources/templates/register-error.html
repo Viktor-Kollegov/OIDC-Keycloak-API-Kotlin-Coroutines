@@ -22,6 +22,7 @@
 <body>
 <div class="box">
     <h1>Registration Error</h1>
+    <p th:text="${param.error != null ? param.error : 'An error occurred during registration'}"></p>
     <p>Try again <a th:href="@{/register}">to register</a></p>
 </div>
 </body>

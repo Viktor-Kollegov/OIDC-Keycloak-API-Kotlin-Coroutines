@@ -27,6 +27,11 @@ public class RegistrationController {
         this.restTemplate = restTemplate;
     }
 
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/register";
+    }
+
     @GetMapping("/register")
     public String register() {
         return "register";
