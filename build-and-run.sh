@@ -17,8 +17,8 @@ for PROJECT in "${PROJECTS[@]}"; do
         error_exit "Директория $PROJECT не найдена."
     fi
     cd "$PROJECT" || error_exit "Не удалось перейти в директорию $PROJECT."
-    if [ ! -f "build.gradle" ]; then
-        error_exit "Файл build.gradle не найден в $PROJECT."
+    if [ ! -f "build.gradle.kts" ]; then
+        error_exit "Файл build.gradle.kts не найден в $PROJECT."
     fi
     ./gradlew clean build -x test || error_exit "Сборка $PROJECT не удалась."
     cd .. || error_exit "Не удалось вернуться в корневую директорию."
