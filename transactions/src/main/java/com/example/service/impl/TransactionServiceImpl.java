@@ -8,6 +8,7 @@ import com.example.service.TransactionService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @Override
     public void deposit(Long accountId, BigDecimal amount, String userId) {
-        Account account = accountRepository.findById(accountId)
+        Account account = accountRepository.findByIdForUpdate(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счет не найден"));
         if (!account.getUserId().equals(userId)) {
             throw new AccessDeniedException("Вы не являетесь владельцем этого счета");
@@ -43,7 +44,7 @@ public class TransactionServiceImpl implements TransactionService {
     @Transactional
     @Override
     public void withdraw(Long accountId, BigDecimal amount, String userId) {
-        Account account = accountRepository.findById(accountId)
+        Account account = accountRepository.findByIdForUpdate(accountId)
                 .orElseThrow(() -> new EntityNotFoundException("Счет не найден"));
         if (!account.getUserId().equals(userId)) {
             throw new AccessDeniedException("Вы не являетесь владельцем этого счета");
@@ -63,6 +64,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
     public BigDecimal calculateBalance(Long accountId) {
         BigDecimal sum = transactionRepository.sumAmountsByAccountId(accountId);
         return sum != null ? sum : BigDecimal.ZERO;
