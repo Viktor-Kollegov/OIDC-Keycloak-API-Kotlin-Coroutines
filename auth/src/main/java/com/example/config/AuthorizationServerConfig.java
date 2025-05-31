@@ -21,7 +21,7 @@ import java.util.UUID;
 public class AuthorizationServerConfig {
 
     private final String clientUrl;
-    private final String CLIENT_ID = "client-app1";
+    private final static String CLIENT_ID = "client-app1";
 
     public AuthorizationServerConfig(@Value("${client.url}") String clientUrl) {
         this.clientUrl = clientUrl;
