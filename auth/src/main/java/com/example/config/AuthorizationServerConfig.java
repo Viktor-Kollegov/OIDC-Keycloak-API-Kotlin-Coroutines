@@ -21,6 +21,7 @@ import java.util.UUID;
 public class AuthorizationServerConfig {
 
     private final String clientUrl;
+    private final String CLIENT_ID = "client-app1";
 
     public AuthorizationServerConfig(@Value("${client.url}") String clientUrl) {
         this.clientUrl = clientUrl;
@@ -28,8 +29,8 @@ public class AuthorizationServerConfig {
 
     @Bean
     public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
-        RegisteredClient registeredClient = RegisteredClient.withId(UUID.nameUUIDFromBytes("client-app1".getBytes()).toString())
-                .clientId("client-app1")
+        RegisteredClient registeredClient = RegisteredClient.withId(UUID.nameUUIDFromBytes(CLIENT_ID.getBytes()).toString())
+                .clientId(CLIENT_ID)
                 .clientAuthenticationMethod(ClientAuthenticationMethod.NONE)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
@@ -48,7 +49,7 @@ public class AuthorizationServerConfig {
                 .build();
 
         JdbcRegisteredClientRepository repo = new JdbcRegisteredClientRepository(jdbcTemplate);
-        if (repo.findByClientId("api-client") == null) {
+        if (repo.findByClientId(CLIENT_ID) == null) {
             repo.save(registeredClient);
         }
         return repo;
