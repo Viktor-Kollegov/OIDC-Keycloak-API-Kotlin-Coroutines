@@ -19,7 +19,7 @@ class SwaggerConfig {
                         .license(
                                 License()
                                         .name("Proprietary")
-                                        .url("https://github.com/Viktor-Kollegov/PKCE-OAuth-API/blob/main/LICENSE")
+                                        .url("https://github.com/Viktor-Kollegov/PKCE-OAuth-API-Kotlin-Coroutines/blob/main/LICENSE")
                         )
         )
     }
