@@ -1,5 +1,6 @@
 plugins {
-    id("java")
+    kotlin("jvm")
+    kotlin("plugin.spring")
     id("org.springframework.boot")
     id("io.spring.dependency-management")
 }
@@ -15,4 +16,5 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     implementation("org.postgresql:postgresql:42.7.2")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 }
