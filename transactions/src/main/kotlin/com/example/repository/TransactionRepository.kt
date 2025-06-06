@@ -1,15 +1,15 @@
 package com.example.repository
 
 import com.example.model.Transaction
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.repository.query.Param
+import kotlinx.coroutines.flow.Flow
+import org.springframework.data.r2dbc.repository.Query
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
+import reactor.core.publisher.Mono
 import java.math.BigDecimal
 
-interface TransactionRepository : JpaRepository<Transaction, Long> {
+interface TransactionRepository : CoroutineCrudRepository<Transaction, Long> {
+    fun findByAccountId(accountId: Long): Flow<Transaction>
 
-    fun findByAccountId(accountId: Long): List<Transaction>
-
-    @Query("SELECT COALESCE(SUM(t.amount), 0) FROM Transaction t WHERE t.account.id = :accountId")
-    fun sumAmountsByAccountId(@Param("accountId") accountId: Long): BigDecimal
+    @Query("SELECT COALESCE(SUM(amount), 0) FROM transaction WHERE account_id = :accountId")
+    fun sumAmountsByAccountId(accountId: Long): Mono<BigDecimal>
 }

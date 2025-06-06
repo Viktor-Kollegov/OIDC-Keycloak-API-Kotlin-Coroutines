@@ -4,10 +4,9 @@ import com.example.dto.AccountCreationRequest
 import com.example.model.Account
 import com.example.repository.AccountRepository
 import com.example.service.TransactionService
-import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
+import com.example.controller.api.TransactionControllerApi
 import jakarta.persistence.EntityNotFoundException
+import kotlinx.coroutines.flow.toList
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
@@ -20,109 +19,59 @@ import java.nio.file.AccessDeniedException
 class TransactionController(
         private val transactionService: TransactionService,
         private val accountRepository: AccountRepository
-) {
+) : TransactionControllerApi {
 
     @PostMapping
-    @Operation(summary = "Создать новый счёт", description = "Создаёт счёт с указанной валютой")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "200", description = "Счёт успешно создан"),
-                ApiResponse(responseCode = "400", description = "Некорректный запрос"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён")
-            ]
-    )
-    fun createAccount(
+    override suspend fun createAccount(
             @RequestBody request: AccountCreationRequest,
             @AuthenticationPrincipal jwt: Jwt
     ): ResponseEntity<Account> {
         val userId = jwt.subject
-        val account = Account().apply {
-            this.userId = userId
-            this.currency = request.currency
-        }
-        accountRepository.save(account)
-        return ResponseEntity.ok(account)
+        val account = Account(userId = userId, currency = request.currency)
+        val saved = accountRepository.save(account)
+        return ResponseEntity.ok(saved)
     }
 
     @PostMapping("/{accountId}/deposit")
-    @Operation(summary = "Пополнить счёт", description = "Добавляет указанную сумму на счёт")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "200", description = "Счёт успешно пополнен"),
-                ApiResponse(responseCode = "400", description = "Некорректная сумма или счёт"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён")
-            ]
-    )
-    fun deposit(
+    override suspend fun deposit(
             @PathVariable accountId: Long,
             @RequestBody amount: BigDecimal,
             @AuthenticationPrincipal jwt: Jwt
     ): ResponseEntity<Void> {
-        val userId = jwt.subject
-        transactionService.deposit(accountId, amount, userId)
+        transactionService.deposit(accountId, amount, jwt.subject)
         return ResponseEntity.ok().build()
     }
 
     @PostMapping("/{accountId}/withdraw")
-    @Operation(summary = "Снять средства со счёта", description = "Снимает указанную сумму со счёта")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "200", description = "Средства успешно сняты"),
-                ApiResponse(responseCode = "400", description = "Недостаточно средств или некорректный счёт"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён")
-            ]
-    )
-    fun withdraw(
+    override suspend fun withdraw(
             @PathVariable accountId: Long,
             @RequestBody amount: BigDecimal,
             @AuthenticationPrincipal jwt: Jwt
     ): ResponseEntity<Void> {
-        val userId = jwt.subject
-        transactionService.withdraw(accountId, amount, userId)
+        transactionService.withdraw(accountId, amount, jwt.subject)
         return ResponseEntity.ok().build()
     }
 
     @GetMapping("/{accountId}/balance")
-    @Operation(summary = "Получить баланс счёта", description = "Возвращает текущий баланс и валюту счёта")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "200", description = "Баланс успешно получен"),
-                ApiResponse(responseCode = "400", description = "Счёт не найден"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён")
-            ]
-    )
-    fun getBalance(
+    override suspend fun getBalance(
             @PathVariable accountId: Long,
             @AuthenticationPrincipal jwt: Jwt
     ): ResponseEntity<Map<String, Any>> {
         val userId = jwt.subject
-        val account = accountRepository.findById(accountId)
-                .orElseThrow { EntityNotFoundException("Счет не найден") }
+        val account = accountRepository.findById(accountId) ?: throw EntityNotFoundException("Счет не найден")
 
         if (account.userId != userId) {
             throw AccessDeniedException("Вы не являетесь владельцем этого счета")
         }
 
         val balance = transactionService.calculateBalance(accountId)
-        val response: Map<String, Any> = mapOf(
-                "balance" to (balance as Any),
-                "currency" to (account.currency as Any)
-        )
-        return ResponseEntity.ok(response)
+        return ResponseEntity.ok(mapOf("balance" to balance, "currency" to account.currency))
     }
 
     @GetMapping
-    @Operation(summary = "Получить список счетов", description = "Возвращает список счетов пользователя")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "200", description = "Список счетов успешно получен"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
-            ]
-    )
-    fun getUserAccounts(@AuthenticationPrincipal jwt: Jwt): ResponseEntity<List<Account>> {
+    override suspend fun getUserAccounts(@AuthenticationPrincipal jwt: Jwt): ResponseEntity<List<Account>> {
         val userId = jwt.subject
-        val accounts = accountRepository.findByUserId(userId)
+        val accounts = accountRepository.findByUserId(userId).toList()
         return ResponseEntity.ok(accounts)
     }
 }

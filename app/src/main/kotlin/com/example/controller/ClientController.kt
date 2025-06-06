@@ -1,9 +1,7 @@
 package com.example.controller
 
-import io.swagger.v3.oas.annotations.Operation
+import com.example.controller.api.ClientControllerApi
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.*
@@ -23,19 +21,12 @@ import java.nio.charset.StandardCharsets
 class ClientController(
         private val restTemplate: RestTemplate,
         @Value("\${resource.server.url}") private val resourceServerUrl: String
-) {
+) : ClientControllerApi {
 
     private val log = LoggerFactory.getLogger(ClientController::class.java)
 
     @GetMapping("/protected")
-    @Operation(summary = "Получить список счетов", description = "Возвращает список всех счетов пользователя")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "200", description = "Список счетов успешно получен"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
-            ]
-    )
-    fun protectedPage(
+    override fun protectedPage(
             @RegisteredOAuth2AuthorizedClient("transactions-api") authorizedClient: OAuth2AuthorizedClient
     ): ModelAndView {
         val accessToken = authorizedClient.accessToken.tokenValue
@@ -58,14 +49,7 @@ class ClientController(
     }
 
     @PostMapping("/create-account")
-    @Operation(summary = "Создать новый счёт", description = "Создаёт счёт с указанной валютой")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "302", description = "Перенаправление на /protected после успешного создания"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
-            ]
-    )
-    fun createAccount(
+    override fun createAccount(
             @Parameter(description = "Валюта счёта (USD, EUR, RUB)", required = true)
             @RequestParam currency: String,
             @RegisteredOAuth2AuthorizedClient("transactions-api") authorizedClient: OAuth2AuthorizedClient
@@ -90,14 +74,7 @@ class ClientController(
     }
 
     @PostMapping("/deposit")
-    @Operation(summary = "Пополнить счёт", description = "Добавляет указанную сумму на счёт")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "302", description = "Перенаправление на /protected после успешного пополнения"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
-            ]
-    )
-    fun deposit(
+    override fun deposit(
             @Parameter(description = "ID счёта", required = true)
             @RequestParam accountId: Long,
             @Parameter(description = "Сумма для пополнения", required = true)
@@ -122,14 +99,7 @@ class ClientController(
     }
 
     @PostMapping("/withdraw")
-    @Operation(summary = "Снять средства со счёта", description = "Снимает указанную сумму со счёта")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "302", description = "Перенаправление на /protected после успешного снятия"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
-            ]
-    )
-    fun withdraw(
+    override fun withdraw(
             @Parameter(description = "ID счёта", required = true)
             @RequestParam accountId: Long,
             @Parameter(description = "Сумма для снятия", required = true)
@@ -154,14 +124,7 @@ class ClientController(
     }
 
     @GetMapping("/balance")
-    @Operation(summary = "Получить баланс счёта", description = "Возвращает текущий баланс и валюту счёта")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "200", description = "Баланс успешно получен"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
-            ]
-    )
-    fun getBalance(
+    override fun getBalance(
             @Parameter(description = "ID счёта", required = true)
             @RequestParam accountId: Long,
             @RegisteredOAuth2AuthorizedClient("transactions-api") authorizedClient: OAuth2AuthorizedClient

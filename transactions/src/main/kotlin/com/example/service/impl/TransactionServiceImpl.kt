@@ -4,67 +4,77 @@ import com.example.model.Transaction
 import com.example.repository.AccountRepository
 import com.example.repository.TransactionRepository
 import com.example.service.TransactionService
-import jakarta.persistence.EntityNotFoundException
-import org.springframework.security.access.AccessDeniedException
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Isolation
-import org.springframework.transaction.annotation.Transactional
+import org.springframework.transaction.reactive.TransactionalOperator
+import reactor.core.publisher.Mono
 import java.math.BigDecimal
-import java.time.LocalDateTime
+import java.util.concurrent.ConcurrentHashMap
+import jakarta.persistence.EntityNotFoundException
+import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactor.mono
+import org.springframework.security.access.AccessDeniedException
 
 @Service
 class TransactionServiceImpl(
         private val transactionRepository: TransactionRepository,
-        private val accountRepository: AccountRepository
+        private val accountRepository: AccountRepository,
+        private val transactionalOperator: TransactionalOperator
 ) : TransactionService {
 
-    @Transactional
-    override fun deposit(accountId: Long, amount: BigDecimal, userId: String) {
-        val account = accountRepository.findByIdForUpdate(accountId)
-                .orElseThrow { EntityNotFoundException("Счет не найден") }
+    private val locks = ConcurrentHashMap<Long, Mutex>()
 
-        if (account.userId != userId) {
-            throw AccessDeniedException("Вы не являетесь владельцем этого счета")
-        }
-        if (amount <= BigDecimal.ZERO) {
-            throw IllegalArgumentException("Сумма пополнения должна быть положительной")
-        }
+    override suspend fun deposit(accountId: Long, amount: BigDecimal, userId: String) {
+        val lock = locks.computeIfAbsent(accountId) { Mutex() }
+        lock.withLock {
+            transactionalOperator.execute {
+                mono {
+                    val account = accountRepository.findByIdForUpdate(accountId)
+                            .switchIfEmpty(Mono.error(EntityNotFoundException("Счет не найден")))
+                            .awaitFirst()
 
-        val transaction = Transaction().apply {
-            this.account = account
-            this.amount = amount
-            this.timestamp = LocalDateTime.now()
+                    if (account.userId != userId)
+                        throw AccessDeniedException("Вы не являетесь владельцем этого счета")
+                    if (amount <= BigDecimal.ZERO)
+                        throw IllegalArgumentException("Сумма пополнения должна быть положительной")
+
+                    val transaction = Transaction(accountId = accountId, amount = amount)
+                    transactionRepository.save(transaction)
+                }
+            }.awaitFirstOrNull()
         }
-        transactionRepository.save(transaction)
     }
 
-    @Transactional
-    override fun withdraw(accountId: Long, amount: BigDecimal, userId: String) {
-        val account = accountRepository.findByIdForUpdate(accountId)
-                .orElseThrow { EntityNotFoundException("Счет не найден") }
 
-        if (account.userId != userId) {
-            throw AccessDeniedException("Вы не являетесь владельцем этого счета")
-        }
-        if (amount <= BigDecimal.ZERO) {
-            throw IllegalArgumentException("Сумма снятия должна быть положительной")
-        }
+    override suspend fun withdraw(accountId: Long, amount: BigDecimal, userId: String) {
+        val lock = locks.computeIfAbsent(accountId) { Mutex() }
+        lock.withLock {
+            transactionalOperator.execute {
+                mono {
+                    val account = accountRepository.findByIdForUpdate(accountId)
+                            .switchIfEmpty(Mono.error(EntityNotFoundException("Счет не найден")))
+                            .awaitFirst()
 
-        val balance = calculateBalance(accountId)
-        if (balance < amount) {
-            throw IllegalStateException("Недостаточно средств на счете")
-        }
+                    if (account.userId != userId)
+                        throw AccessDeniedException("Вы не являетесь владельцем этого счета")
+                    if (amount <= BigDecimal.ZERO)
+                        throw IllegalArgumentException("Сумма снятия должна быть положительной")
 
-        val transaction = Transaction().apply {
-            this.account = account
-            this.amount = amount.negate()
-            this.timestamp = LocalDateTime.now()
+                    val balance = transactionRepository.sumAmountsByAccountId(accountId).awaitFirst()
+                    if (balance < amount)
+                        throw IllegalStateException("Недостаточно средств на счете")
+
+                    val transaction = Transaction(accountId = accountId, amount = amount.negate())
+                    transactionRepository.save(transaction)
+                }
+            }.awaitFirstOrNull()
         }
-        transactionRepository.save(transaction)
     }
 
-    @Transactional(readOnly = true, isolation = Isolation.READ_COMMITTED)
-    override fun calculateBalance(accountId: Long): BigDecimal {
-        return transactionRepository.sumAmountsByAccountId(accountId)
+
+    override suspend fun calculateBalance(accountId: Long): BigDecimal {
+        return transactionRepository.sumAmountsByAccountId(accountId).awaitFirst()
     }
 }

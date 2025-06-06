@@ -1,16 +1,10 @@
 package com.example.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import org.springframework.data.annotation.Id
 
-@Entity
-class Account(
+data class Account(
         @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        var id: Long? = null,
-
-        var userId: String? = null,
-        var currency: String? = null
+        val id: Long? = null,
+        val userId: String,
+        val currency: String
 )

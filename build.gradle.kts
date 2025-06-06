@@ -24,17 +24,3 @@ allprojects {
     }
 }
 
-tasks.register("bootRunAll") {
-    group = "application"
-    description = "Run all Spring Boot apps in parallel"
-
-    doLast {
-        val isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
-        val script = if (isWindows) "cmd /c runAll.bat" else "./runAll.sh"
-
-        exec {
-            commandLine = script.split(" ")
-        }
-    }
-}
-

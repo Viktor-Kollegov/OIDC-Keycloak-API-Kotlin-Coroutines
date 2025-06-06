@@ -1,7 +1,6 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://postgres:5432/resourcedb
-    driver-class-name: org.postgresql.Driver
+  r2dbc:
+    url: r2dbc:postgresql://postgres:5432/resourcedb
     username: postgres
     password: postgres
   liquibase:

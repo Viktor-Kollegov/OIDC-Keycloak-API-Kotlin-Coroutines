@@ -1,22 +1,14 @@
 package com.example.repository
 
 import com.example.model.Account
-import jakarta.persistence.LockModeType
-import jakarta.persistence.QueryHint
-import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.data.jpa.repository.Lock
-import org.springframework.data.jpa.repository.Query
-import org.springframework.data.jpa.repository.QueryHints
-import org.springframework.data.repository.query.Param
-import java.util.*
+import kotlinx.coroutines.flow.Flow
+import org.springframework.data.r2dbc.repository.Query
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
+import reactor.core.publisher.Mono
 
-interface AccountRepository : JpaRepository<Account, Long> {
-    fun findByUserId(userId: String): List<Account>
+interface AccountRepository : CoroutineCrudRepository<Account, Long> {
+    fun findByUserId(userId: String): Flow<Account>
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT a FROM Account a WHERE a.id = :accountId")
-    @QueryHints(
-            QueryHint(name = "jakarta.persistence.lock.timeout", value = "5000")
-    )
-    fun findByIdForUpdate(@Param("accountId") accountId: Long): Optional<Account>
+    @Query("SELECT id, user_id, currency FROM account WHERE id = :accountId")
+    fun findByIdForUpdate(accountId: Long): Mono<Account>
 }
