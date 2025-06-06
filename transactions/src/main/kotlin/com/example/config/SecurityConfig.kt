@@ -3,8 +3,9 @@ package com.example.config
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.web.server.SecurityWebFilterChain
+
 
 @Configuration
 class SecurityConfig(
@@ -12,18 +13,18 @@ class SecurityConfig(
 ) {
 
     @Bean
-    fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http
-                .authorizeHttpRequests { authorize ->
-                    authorize
-                            .requestMatchers("/api/accounts**").authenticated()
-                            .anyRequest().permitAll()
+    fun springSecurityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
+        return http
+                .authorizeExchange { exchanges ->
+                    exchanges
+                            .pathMatchers("/api/accounts/**").authenticated()
+                            .anyExchange().permitAll()
                 }
                 .oauth2ResourceServer { oauth2 ->
                     oauth2.jwt { jwt ->
                         jwt.jwkSetUri("$authServerUrl/oauth2/jwks")
                     }
                 }
-        return http.build()
+                .build()
     }
 }

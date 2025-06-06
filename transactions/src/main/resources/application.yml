@@ -1,12 +1,8 @@
  spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
+  r2dbc:
+    url: r2dbc:postgresql://postgres:5432/resourcedb
+    username: postgres
+    password: postgres
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
  server:
@@ -16,6 +12,8 @@
      org.springframework.security: DEBUG
      org.springframework.web: DEBUG
      org.springframework.session: DEBUG
+     org.springframework.data.r2dbc: DEBUG
+     org.springframework.context.annotation: DEBUG
 
  auth:
    server:
