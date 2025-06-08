@@ -5,7 +5,6 @@ import com.example.model.Account
 import com.example.repository.AccountRepository
 import com.example.service.TransactionService
 import com.example.controller.api.TransactionControllerApi
-import jakarta.persistence.EntityNotFoundException
 import kotlinx.coroutines.flow.toList
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -58,7 +57,7 @@ class TransactionController(
             @AuthenticationPrincipal jwt: Jwt
     ): ResponseEntity<Map<String, Any>> {
         val userId = jwt.subject
-        val account = accountRepository.findById(accountId) ?: throw EntityNotFoundException("Счет не найден")
+        val account = accountRepository.findById(accountId) ?: throw NoSuchElementException("Счет не найден")
 
         if (account.userId != userId) {
             throw AccessDeniedException("Вы не являетесь владельцем этого счета")
