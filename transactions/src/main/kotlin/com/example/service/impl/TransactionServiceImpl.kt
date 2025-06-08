@@ -11,7 +11,6 @@ import org.springframework.transaction.reactive.TransactionalOperator
 import reactor.core.publisher.Mono
 import java.math.BigDecimal
 import java.util.concurrent.ConcurrentHashMap
-import jakarta.persistence.EntityNotFoundException
 import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.mono
@@ -32,7 +31,7 @@ class TransactionServiceImpl(
             transactionalOperator.execute {
                 mono {
                     val account = accountRepository.findByIdForUpdate(accountId)
-                            .switchIfEmpty(Mono.error(EntityNotFoundException("Счет не найден")))
+                            .switchIfEmpty(Mono.error(NoSuchElementException("Счет не найден")))
                             .awaitFirst()
 
                     if (account.userId != userId)
@@ -54,7 +53,7 @@ class TransactionServiceImpl(
             transactionalOperator.execute {
                 mono {
                     val account = accountRepository.findByIdForUpdate(accountId)
-                            .switchIfEmpty(Mono.error(EntityNotFoundException("Счет не найден")))
+                            .switchIfEmpty(Mono.error(NoSuchElementException("Счет не найден")))
                             .awaitFirst()
 
                     if (account.userId != userId)

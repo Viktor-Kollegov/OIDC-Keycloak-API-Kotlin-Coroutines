@@ -7,7 +7,6 @@ plugins {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux:3.3.0")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.3.0")
     implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
     implementation("org.liquibase:liquibase-core:4.24.0")
     implementation(project(mapOf("path" to ":common")))
