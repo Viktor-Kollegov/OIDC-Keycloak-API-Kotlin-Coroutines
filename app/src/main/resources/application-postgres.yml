@@ -2,6 +2,9 @@ domain: 127.0.0.1
 resource:
   server:
     url: http://resource-server:8081
+auth:
+  server:
+    url: http://auth-server:9000
 spring:
   security:
     oauth2:
@@ -16,8 +19,8 @@ spring:
             client-name: Transactions API Client
         provider:
           transactions-api:
-            authorization-uri: http://${domain}:9000/oauth2/authorize
-            token-uri: http://auth-server:9000/oauth2/token
+            authorization-uri: ${auth.server.url}/oauth2/authorize
+            token-uri: ${auth.server.url}/oauth2/token
 server:
   port: 8082
   servlet:
