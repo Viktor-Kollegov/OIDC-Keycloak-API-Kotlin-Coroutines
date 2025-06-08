@@ -20,7 +20,7 @@ spring:
         provider:
           transactions-api:
             authorization-uri: http://${domain}:9000/oauth2/authorize
-            token-uri: ${auth.server.url}/oauth2/token$
+            token-uri: ${auth.server.url}/oauth2/token
 server:
   port: 8082
   servlet:
