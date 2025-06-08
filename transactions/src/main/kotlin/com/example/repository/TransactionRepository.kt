@@ -8,6 +8,7 @@ import reactor.core.publisher.Mono
 import java.math.BigDecimal
 
 interface TransactionRepository : CoroutineCrudRepository<Transaction, Long> {
+    @Query("SELECT id, account_id, amount FROM transaction WHERE account_id = :accountId")
     fun findByAccountId(accountId: Long): Flow<Transaction>
 
     @Query("SELECT COALESCE(SUM(amount), 0) FROM transaction WHERE account_id = :accountId")
