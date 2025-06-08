@@ -6,6 +6,7 @@ import com.example.repository.AccountRepository
 import com.example.service.TransactionService
 import com.example.controller.api.TransactionControllerApi
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.reactive.asFlow
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.oauth2.jwt.Jwt
@@ -70,7 +71,7 @@ class TransactionController(
     @GetMapping
     override suspend fun getUserAccounts(@AuthenticationPrincipal jwt: Jwt): ResponseEntity<List<Account>> {
         val userId = jwt.subject
-        val accounts = accountRepository.findByUserId(userId).toList()
+        val accounts = accountRepository.findByUserId(userId).asFlow().toList()
         return ResponseEntity.ok(accounts)
     }
 }
