@@ -19,8 +19,8 @@ spring:
             client-name: Transactions API Client
         provider:
           transactions-api:
-            authorization-uri: ${auth.server.url}/oauth2/authorize
-            token-uri: ${auth.server.url}/oauth2/token
+            authorization-uri: http://${domain}:9000/oauth2/authorize
+            token-uri: ${auth.server.url}/oauth2/token$
 server:
   port: 8082
   servlet:
