@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.servlet.ModelAndView
 import java.math.BigDecimal
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
+
 
 @Controller
 class ClientController(
@@ -32,19 +31,12 @@ class ClientController(
         val accessToken = authorizedClient.accessToken.tokenValue
         val headers = HttpHeaders().apply { setBearerAuth(accessToken) }
         val request = HttpEntity<Void>(headers)
-        return try {
-            val response = restTemplate.exchange(
-                    "$resourceServerUrl/api/accounts", HttpMethod.GET, request, List::class.java
-            )
-            val accounts = response.body
-            ModelAndView("protected").apply {
-                addObject("accounts", accounts)
-            }
-        } catch (e: Exception) {
-            log.error("Exception in protectedPage: {}", e.message, e)
-            ModelAndView("error").apply {
-                addObject("error", "Не удалось получить счета: ${e.message}")
-            }
+        val response = restTemplate.exchange(
+                "$resourceServerUrl/api/accounts", HttpMethod.GET, request, List::class.java
+        )
+        val accounts = response.body
+        return ModelAndView("protected").apply {
+            addObject("accounts", accounts)
         }
     }
 
@@ -62,15 +54,10 @@ class ClientController(
         }
         val body = mapOf("currency" to currency)
         val request = HttpEntity(body, headers)
-        return try {
-            restTemplate.exchange(
-                    "$resourceServerUrl/api/accounts", HttpMethod.POST, request, Void::class.java
-            )
-            "redirect:/protected"
-        } catch (e: Exception) {
-            log.error("Exception in createAccount: {}", e.message, e)
-            "redirect:/error?message=" + URLEncoder.encode(e.message, StandardCharsets.UTF_8)
-        }
+        restTemplate.exchange(
+                "$resourceServerUrl/api/accounts", HttpMethod.POST, request, Void::class.java
+        )
+        return "redirect:/protected"
     }
 
     @PostMapping("/deposit")
@@ -87,15 +74,10 @@ class ClientController(
             contentType = MediaType.APPLICATION_JSON
         }
         val request = HttpEntity(amount, headers)
-        return try {
-            restTemplate.exchange(
-                    "$resourceServerUrl/api/accounts/$accountId/deposit", HttpMethod.POST, request, Void::class.java
-            )
-            "redirect:/protected"
-        } catch (e: Exception) {
-            log.error("Exception in deposit: {}", e.message, e)
-            "redirect:/error?message=" + URLEncoder.encode(e.message, StandardCharsets.UTF_8)
-        }
+        restTemplate.exchange(
+                "$resourceServerUrl/api/accounts/$accountId/deposit", HttpMethod.POST, request, Void::class.java
+        )
+        return "redirect:/protected"
     }
 
     @PostMapping("/withdraw")
@@ -112,15 +94,10 @@ class ClientController(
             contentType = MediaType.APPLICATION_JSON
         }
         val request = HttpEntity(amount, headers)
-        return try {
-            restTemplate.exchange(
-                    "$resourceServerUrl/api/accounts/$accountId/withdraw", HttpMethod.POST, request, Void::class.java
-            )
-            "redirect:/protected"
-        } catch (e: Exception) {
-            log.error("Exception in withdraw: {}", e.message, e)
-            "redirect:/error?message=" + URLEncoder.encode(e.message, StandardCharsets.UTF_8)
-        }
+        restTemplate.exchange(
+                "$resourceServerUrl/api/accounts/$accountId/withdraw", HttpMethod.POST, request, Void::class.java
+        )
+        return "redirect:/protected"
     }
 
     @GetMapping("/balance")
@@ -132,23 +109,16 @@ class ClientController(
         val accessToken = authorizedClient.accessToken.tokenValue
         val headers = HttpHeaders().apply { setBearerAuth(accessToken) }
         val request = HttpEntity<Void>(headers)
-        return try {
-            val response = restTemplate.exchange(
-                    "$resourceServerUrl/api/accounts/$accountId/balance", HttpMethod.GET, request, Map::class.java
-            )
-            val balanceData = response.body ?: emptyMap<String, Any>()
-            val balance = BigDecimal(balanceData["balance"].toString())
-            val currency = balanceData["currency"] as String
-            ModelAndView("balance").apply {
-                addObject("accountId", accountId)
-                addObject("balance", balance)
-                addObject("currency", currency)
-            }
-        } catch (e: Exception) {
-            log.error("Exception in getBalance: {}", e.message, e)
-            ModelAndView("error").apply {
-                addObject("error", "Не удалось получить баланс: ${e.message}")
-            }
+        val response = restTemplate.exchange(
+                "$resourceServerUrl/api/accounts/$accountId/balance", HttpMethod.GET, request, Map::class.java
+        )
+        val balanceData = response.body ?: emptyMap<String, Any>()
+        val balance = BigDecimal(balanceData["balance"].toString())
+        val currency = balanceData["currency"] as String
+        return ModelAndView("balance").apply {
+            addObject("accountId", accountId)
+            addObject("balance", balance)
+            addObject("currency", currency)
         }
     }
 }

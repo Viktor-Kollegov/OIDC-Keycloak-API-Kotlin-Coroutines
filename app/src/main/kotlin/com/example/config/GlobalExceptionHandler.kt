@@ -16,13 +16,8 @@ class GlobalExceptionHandler {
     @ExceptionHandler(HttpServerErrorException::class)
     fun handleServerError(e: HttpServerErrorException): String {
         log.error("Server error from resource server: {}", e.message, e)
-        val userMessage = "Произошла ошибка на сервере. Пожалуйста, попробуйте снова позже."
-        return try {
-            "redirect:/error?message=" + URLEncoder.encode(userMessage, StandardCharsets.UTF_8)
-        } catch (ex: Exception) {
-            log.error("Error encoding message: {}", ex.message, ex)
-            "redirect:/error?message=Unexpected+error"
-        }
+        val userMessage = "Ошибка на сервере. Пожалуйста, попробуйте снова позже. Причина: ${e.rootCause}"
+        return "redirect:/error?message=" + URLEncoder.encode(userMessage, StandardCharsets.UTF_8)
     }
 
     @ExceptionHandler(HttpClientErrorException::class)
@@ -32,13 +27,8 @@ class GlobalExceptionHandler {
             400 -> "Некорректный запрос. Проверьте введённые данные."
             401 -> "Требуется повторная авторизация."
             403 -> "Доступ запрещён. У вас недостаточно прав."
-            else -> "Ошибка при выполнении запроса. Попробуйте снова."
+            else -> "Ошибка при выполнении запроса. Попробуйте снова. Причина: ${e.rootCause}"
         }
-        return try {
-            "redirect:/error?message=" + URLEncoder.encode(userMessage, StandardCharsets.UTF_8)
-        } catch (ex: Exception) {
-            log.error("Error encoding message: {}", ex.message, ex)
-            "redirect:/error?message=Unexpected+error"
-        }
+        return "redirect:/error?message=" + URLEncoder.encode(userMessage, StandardCharsets.UTF_8)
     }
 }
