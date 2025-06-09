@@ -3,6 +3,7 @@ spring:
     url: jdbc:postgresql://127.0.0.1:5432/resourcedb
     username: postgres
     password: postgres
+    driver-class-name: org.postgresql.Driver
   r2dbc:
     url: r2dbc:postgresql://127.0.0.1:5432/resourcedb
     username: postgres
