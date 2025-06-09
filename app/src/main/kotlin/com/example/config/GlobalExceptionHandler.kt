@@ -16,7 +16,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(HttpServerErrorException::class)
     fun handleServerError(e: HttpServerErrorException): String {
         log.error("Server error from resource server: {}", e.message, e)
-        val userMessage = "Ошибка на сервере. Пожалуйста, попробуйте снова позже. Причина: ${e.rootCause}"
+        val userMessage = "Server error from resource server. Cause: ${e.cause}"
         return "redirect:/error?message=" + URLEncoder.encode(userMessage, StandardCharsets.UTF_8)
     }
 
@@ -27,7 +27,7 @@ class GlobalExceptionHandler {
             400 -> "Некорректный запрос. Проверьте введённые данные."
             401 -> "Требуется повторная авторизация."
             403 -> "Доступ запрещён. У вас недостаточно прав."
-            else -> "Ошибка при выполнении запроса. Попробуйте снова. Причина: ${e.rootCause}"
+            else -> "Ошибка при выполнении запроса. Попробуйте снова. Причина: ${e.cause}"
         }
         return "redirect:/error?message=" + URLEncoder.encode(userMessage, StandardCharsets.UTF_8)
     }
