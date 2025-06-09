@@ -13,6 +13,7 @@ server:
   port: 8081
 logging:
   level:
+    liquibase: DEBUG
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
     org.springframework.session: DEBUG
