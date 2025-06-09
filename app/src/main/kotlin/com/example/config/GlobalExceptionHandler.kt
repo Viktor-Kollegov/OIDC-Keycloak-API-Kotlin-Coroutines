@@ -16,7 +16,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(HttpServerErrorException::class)
     fun handleServerError(e: HttpServerErrorException): String {
         log.error("Server error from resource server: {}", e.message, e)
-        val userMessage = "Server error from resource server. Cause: ${e.cause}"
+        val userMessage = "Resource server error. ${e.message}"
         return "redirect:/error?message=" + URLEncoder.encode(userMessage, StandardCharsets.UTF_8)
     }
 
@@ -24,10 +24,10 @@ class GlobalExceptionHandler {
     fun handleClientError(e: HttpClientErrorException): String {
         log.error("Client error from resource server: {}", e.message, e)
         val userMessage = when (e.statusCode.value()) {
-            400 -> "Некорректный запрос. Проверьте введённые данные."
-            401 -> "Требуется повторная авторизация."
-            403 -> "Доступ запрещён. У вас недостаточно прав."
-            else -> "Ошибка при выполнении запроса. Попробуйте снова. Причина: ${e.cause}"
+            400 -> "Invalid request. Please check the data you entered."
+            401 -> "Re-authentication required."
+            403 -> "Access denied. You do not have sufficient permissions."
+            else -> "An error occurred during the request. Please try again."
         }
         return "redirect:/error?message=" + URLEncoder.encode(userMessage, StandardCharsets.UTF_8)
     }
