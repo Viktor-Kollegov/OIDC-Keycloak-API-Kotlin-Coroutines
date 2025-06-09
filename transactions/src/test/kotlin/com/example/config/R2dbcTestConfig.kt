@@ -1,8 +1,6 @@
 package com.example.config
 
 import io.r2dbc.spi.ConnectionFactory
-import io.r2dbc.spi.ConnectionFactoryOptions.*
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.r2dbc.ConnectionFactoryBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -13,17 +11,14 @@ import org.springframework.r2dbc.connection.TransactionAwareConnectionFactoryPro
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.transaction.reactive.TransactionalOperator
 
-
 @Configuration
-@Profile("!test")
-class R2dbcConfig(@Value("\${db.domain}") private val host: String) {
+@Profile("test")
+class R2dbcTestConfig {
 
     @Bean
     fun connectionFactory(): ConnectionFactory {
-        return ConnectionFactoryBuilder.withUrl("r2dbc:postgresql://$host:5432/resourcedb")
-                .username("postgres")
-                .password("postgres")
-                .port(5432)
+        return ConnectionFactoryBuilder.withUrl("r2dbc:h2:mem:///testdb;DB_CLOSE_DELAY=-1")
+                .username("sa")
                 .build()
     }
 

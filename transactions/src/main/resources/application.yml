@@ -1,16 +1,21 @@
+db:
+  domain: 127.0.0.1
 spring:
   r2dbc:
-    url: r2dbc:postgresql://127.0.0.1:5432/resourcedb
+    url: r2dbc:postgresql://${db.domain}:5432/resourcedb
     username: postgres
     password: postgres
 server:
   port: 8081
 logging:
   level:
+    org.springframework.r2dbc.connection: DEBUG
+    io.r2dbc.postgresql: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    org.springframework.transaction: DEBUG
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
     org.springframework.session: DEBUG
-    org.springframework.data.r2dbc: DEBUG
     org.springframework.context.annotation: DEBUG
 
 auth:

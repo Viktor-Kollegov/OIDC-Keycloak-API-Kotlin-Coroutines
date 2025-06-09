@@ -19,6 +19,7 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("org.postgresql:r2dbc-postgresql:1.0.7.RELEASE")
+    implementation("io.r2dbc:r2dbc-pool:1.0.2.RELEASE")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
