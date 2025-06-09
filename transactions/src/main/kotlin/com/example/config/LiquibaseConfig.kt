@@ -12,7 +12,7 @@ class LiquibaseConfig {
     @Bean
     fun dataSource(): HikariDataSource {
         val dataSource = HikariDataSource()
-        dataSource.jdbcUrl = "jdbc:postgresql://127.0.0.1:5432/resourcedb"
+        dataSource.jdbcUrl = "jdbc:postgresql://postgres:5432/resourcedb"
         dataSource.username = "postgres"
         dataSource.password = "postgres"
         dataSource.driverClassName = "org.postgresql.Driver"
