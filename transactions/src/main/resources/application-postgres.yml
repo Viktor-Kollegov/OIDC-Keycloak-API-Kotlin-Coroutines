@@ -1,4 +1,8 @@
 spring:
+  datasource:
+    url: jdbc:postgresql://postgres:5432/resourcedb
+    username: postgres
+    password: postgres
   r2dbc:
     url: r2dbc:postgresql://postgres:5432/resourcedb
     username: postgres
@@ -12,6 +16,8 @@ logging:
     org.springframework.security: DEBUG
     org.springframework.web: DEBUG
     org.springframework.session: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    org.springframework.context.annotation: DEBUG
 
 auth:
   server:
