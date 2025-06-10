@@ -8,10 +8,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.springframework.stereotype.Service
 import org.springframework.transaction.reactive.TransactionalOperator
-import reactor.core.publisher.Mono
 import java.math.BigDecimal
 import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.transaction.reactive.executeAndAwait
 
@@ -28,15 +28,14 @@ class TransactionServiceImpl(
         val lock = locks.computeIfAbsent(accountId) { Mutex() }
         lock.withLock {
             transactionalOperator.executeAndAwait {
-                val account = accountRepository.findByIdForUpdate(accountId)
-                        .switchIfEmpty(Mono.error(NoSuchElementException("Счет не найден")))
-                        .awaitFirst()
+                val account = accountRepository.findByIdForUpdate(accountId).awaitFirstOrNull()
+                        ?: throw NoSuchElementException("Account not found")
 
                 if (account.userId != userId)
-                    throw AccessDeniedException("Вы не являетесь владельцем этого счета")
+                    throw AccessDeniedException("You are not the owner of this account.")
 
                 if (amount <= BigDecimal.ZERO)
-                    throw IllegalArgumentException("Сумма пополнения должна быть положительной")
+                    throw IllegalArgumentException("The replenishment amount must be positive")
 
                 transactionRepository.save(Transaction(accountId = accountId, amount = amount))
             }
@@ -47,18 +46,17 @@ class TransactionServiceImpl(
         val lock = locks.computeIfAbsent(accountId) { Mutex() }
         lock.withLock {
             transactionalOperator.executeAndAwait {
-                val account = accountRepository.findByIdForUpdate(accountId)
-                        .switchIfEmpty(Mono.error(NoSuchElementException("Счет не найден")))
-                        .awaitFirst()
+                val account = accountRepository.findByIdForUpdate(accountId).awaitFirstOrNull()
+                        ?: throw NoSuchElementException("Account not found")
 
                 if (account.userId != userId)
-                    throw AccessDeniedException("Вы не являетесь владельцем этого счета")
+                    throw AccessDeniedException("You are not the owner of this account.")
                 if (amount <= BigDecimal.ZERO)
-                    throw IllegalArgumentException("Сумма снятия должна быть положительной")
+                    throw IllegalArgumentException("The withdrawal amount must be positive.")
 
                 val balance = transactionRepository.sumAmountsByAccountId(accountId).awaitFirst()
                 if (balance < amount)
-                    throw IllegalStateException("Недостаточно средств на счете")
+                    throw IllegalStateException("Insufficient funds in the account")
 
                 transactionRepository.save(Transaction(accountId = accountId, amount = amount.negate()))
             }
