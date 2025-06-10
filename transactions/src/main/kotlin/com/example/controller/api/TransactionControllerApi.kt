@@ -11,52 +11,52 @@ import java.math.BigDecimal
 
 interface TransactionControllerApi {
 
-    @Operation(summary = "Создать новый счёт", description = "Создаёт счёт с указанной валютой")
+    @Operation(summary = "Create a new account", description = "Creates an account with the specified currency")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "200", description = "Счёт успешно создан"),
-                ApiResponse(responseCode = "400", description = "Некорректный запрос"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён")
+                ApiResponse(responseCode = "200", description = "Account successfully created"),
+                ApiResponse(responseCode = "422", description = "Invalid currency or parameters"),
+                ApiResponse(responseCode = "424", description = "Access denied")
             ]
     )
     suspend fun createAccount(request: AccountCreationRequest, jwt: Jwt): ResponseEntity<Account>
 
-    @Operation(summary = "Пополнить счёт", description = "Добавляет указанную сумму на счёт")
+    @Operation(summary = "Deposit into account", description = "Adds the specified amount to the account")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "200", description = "Счёт успешно пополнен"),
-                ApiResponse(responseCode = "400", description = "Некорректная сумма или счёт"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён")
+                ApiResponse(responseCode = "200", description = "Deposit successful"),
+                ApiResponse(responseCode = "422", description = "Invalid amount or account ID"),
+                ApiResponse(responseCode = "424", description = "Access denied")
             ]
     )
     suspend fun deposit(accountId: Long, amount: BigDecimal, jwt: Jwt): ResponseEntity<Void>
 
-    @Operation(summary = "Снять средства со счёта", description = "Снимает указанную сумму со счёта")
+    @Operation(summary = "Withdraw from account", description = "Withdraws the specified amount from the account")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "200", description = "Средства успешно сняты"),
-                ApiResponse(responseCode = "400", description = "Недостаточно средств или некорректный счёт"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён")
+                ApiResponse(responseCode = "200", description = "Withdrawal successful"),
+                ApiResponse(responseCode = "422", description = "Insufficient funds or invalid account ID"),
+                ApiResponse(responseCode = "424", description = "Access denied")
             ]
     )
     suspend fun withdraw(accountId: Long, amount: BigDecimal, jwt: Jwt): ResponseEntity<Void>
 
-    @Operation(summary = "Получить баланс счёта", description = "Возвращает текущий баланс и валюту счёта")
+    @Operation(summary = "Get account balance", description = "Returns the current balance and currency for the account")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "200", description = "Баланс успешно получен"),
-                ApiResponse(responseCode = "400", description = "Счёт не найден"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён")
+                ApiResponse(responseCode = "200", description = "Balance successfully retrieved"),
+                ApiResponse(responseCode = "501", description = "Account not found"),
+                ApiResponse(responseCode = "424", description = "Access denied")
             ]
     )
     suspend fun getBalance(accountId: Long, jwt: Jwt): ResponseEntity<Map<String, Any>>
 
-    @Operation(summary = "Получить список счетов", description = "Возвращает список счетов пользователя")
+    @Operation(summary = "Get list of user accounts", description = "Returns the list of all accounts for the user")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "200", description = "Список счетов успешно получен"),
-                ApiResponse(responseCode = "403", description = "Доступ запрещён"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
+                ApiResponse(responseCode = "200", description = "Accounts successfully retrieved"),
+                ApiResponse(responseCode = "424", description = "Access denied"),
+                ApiResponse(responseCode = "500", description = "Internal server error")
             ]
     )
     suspend fun getUserAccounts(jwt: Jwt): ResponseEntity<List<Account>>

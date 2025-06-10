@@ -14,7 +14,7 @@ class SwaggerConfig {
         return OpenAPI().info(
                 Info()
                         .title("Resource Server API")
-                        .description("API для управления счетами на сервере ресурсов")
+                        .description("API for managing accounts on the resource server")
                         .version("1.0.0")
                         .license(
                                 License()

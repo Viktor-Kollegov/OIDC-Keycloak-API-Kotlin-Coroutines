@@ -9,47 +9,47 @@ import org.springframework.web.servlet.ModelAndView
 
 interface ClientControllerApi {
 
-    @Operation(summary = "Получить список счетов", description = "Возвращает список всех счетов пользователя")
+    @Operation(summary = "Get list of accounts", description = "Returns the list of all user accounts")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "200", description = "Список счетов успешно получен"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
+                ApiResponse(responseCode = "200", description = "Accounts list successfully retrieved"),
+                ApiResponse(responseCode = "500", description = "Server error")
             ]
     )
     fun protectedPage(authorizedClient: OAuth2AuthorizedClient): ModelAndView
 
-    @Operation(summary = "Создать новый счёт", description = "Создаёт счёт с указанной валютой")
+    @Operation(summary = "Create a new account", description = "Creates an account with the specified currency")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "302", description = "Перенаправление на /protected после успешного создания"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
+                ApiResponse(responseCode = "302", description = "Redirect to /protected after successful creation"),
+                ApiResponse(responseCode = "500", description = "Server error")
             ]
     )
     fun createAccount(currency: String, authorizedClient: OAuth2AuthorizedClient): String
 
-    @Operation(summary = "Пополнить счёт", description = "Добавляет указанную сумму на счёт")
+    @Operation(summary = "Deposit into account", description = "Adds the specified amount to the account")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "302", description = "Перенаправление на /protected после успешного пополнения"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
+                ApiResponse(responseCode = "302", description = "Redirect to /protected after successful deposit"),
+                ApiResponse(responseCode = "500", description = "Server error")
             ]
     )
     fun deposit(accountId: Long, amount: BigDecimal, authorizedClient: OAuth2AuthorizedClient): String
 
-    @Operation(summary = "Снять средства со счёта", description = "Снимает указанную сумму со счёта")
+    @Operation(summary = "Withdraw from account", description = "Withdraws the specified amount from the account")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "302", description = "Перенаправление на /protected после успешного снятия"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
+                ApiResponse(responseCode = "302", description = "Redirect to /protected after successful withdrawal"),
+                ApiResponse(responseCode = "500", description = "Server error")
             ]
     )
     fun withdraw(accountId: Long, amount: BigDecimal, authorizedClient: OAuth2AuthorizedClient): String
 
-    @Operation(summary = "Получить баланс счёта", description = "Возвращает текущий баланс и валюту счёта")
+    @Operation(summary = "Get account balance", description = "Returns the current account balance and currency")
     @ApiResponses(
             value = [
-                ApiResponse(responseCode = "200", description = "Баланс успешно получен"),
-                ApiResponse(responseCode = "500", description = "Ошибка сервера")
+                ApiResponse(responseCode = "200", description = "Balance successfully retrieved"),
+                ApiResponse(responseCode = "500", description = "Server error")
             ]
     )
     fun getBalance(accountId: Long, authorizedClient: OAuth2AuthorizedClient): ModelAndView

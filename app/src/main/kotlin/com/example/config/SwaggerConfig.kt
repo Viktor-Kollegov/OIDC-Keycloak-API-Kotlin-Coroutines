@@ -14,7 +14,7 @@ class SwaggerConfig {
         return OpenAPI().info(
                 Info()
                         .title("Client API")
-                        .description("API для управления счетами через клиентское приложение")
+                        .description("API for managing accounts via a client application")
                         .version("1.0.0")
                         .license(
                                 License()
