@@ -5,15 +5,15 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 error_exit() {
-    echo -e "${RED}Ошибка: $1${NC}" >&2
+    echo -e "${RED}Error: $1${NC}" >&2
     exit 1
 }
 
-echo -e "${GREEN}Сборка проекта...${NC}"
+echo -e "${GREEN}Building the project...${NC}"
 
-./gradlew clean build -x test || error_exit "Сборка не удалась."
+./gradlew clean build -x test || error_exit "Build failed."
 
-echo -e "${GREEN}Запуск Docker Compose...${NC}"
-docker-compose up --build || error_exit "Не удалось запустить Docker Compose."
+echo -e "${GREEN}Starting Docker Compose...${NC}"
+docker-compose up --build || error_exit "Docker Compose failed."
 
-echo -e "${GREEN}Все приложения успешно запущены!${NC}"
+echo -e "${GREEN}All applications started successfully!${NC}"
