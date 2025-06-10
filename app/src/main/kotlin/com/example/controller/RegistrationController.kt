@@ -2,8 +2,6 @@ package com.example.controller
 
 import com.example.dto.RegistrationRequest
 import io.swagger.v3.oas.annotations.Operation
-import io.swagger.v3.oas.annotations.responses.ApiResponse
-import io.swagger.v3.oas.annotations.responses.ApiResponses
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
@@ -29,13 +27,7 @@ class RegistrationController(
     fun register(): String = "register"
 
     @PostMapping("/register")
-    @Operation(summary = "Регистрация нового пользователя", description = "Создаёт новый аккаунт пользователя")
-    @ApiResponses(
-            value = [
-                ApiResponse(responseCode = "302", description = "Перенаправление на /register-success после успешной регистрации"),
-                ApiResponse(responseCode = "500", description = "Перенаправление на /register-error после ошибки регистрации")
-            ]
-    )
+    @Operation(summary = "New User Registration", description = "Creates a new user account")
     fun register(@RequestBody request: RegistrationRequest): String {
         return try {
             val headers = HttpHeaders().apply {
