@@ -1,3 +1,3 @@
-rootProject.name = "pkce-oauth-api"
+rootProject.name = "OIDC-Keycloak-API-Kotlin-Coroutines"
 include("app", "auth", "transactions")
 include("common")
