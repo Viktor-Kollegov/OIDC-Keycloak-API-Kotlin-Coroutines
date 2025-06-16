@@ -44,7 +44,7 @@
     <p th:if="${param.message != null}" th:text="${param.message}"></p>
     <p th:if="${error != null and param.message == null}" th:text="${error}"></p>
     <p th:if="${error == null and param.message == null}">An unexpected error occurred</p>
-    <a th:href="@{/oauth2/authorization/transactions-api}">
+    <a th:href="@{/oauth2/authorization/keycloak}">
         <button class="refresh-button">Try Again</button>
     </a>
 </div>

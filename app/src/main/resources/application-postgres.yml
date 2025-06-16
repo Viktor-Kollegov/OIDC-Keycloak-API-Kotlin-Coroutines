@@ -1,28 +1,33 @@
 domain: 127.0.0.1
 resource:
   server:
-    url: http://resource-server:8081
+    url: http://resource-server:8082
 auth:
   server:
-    url: http://auth-server:9000
+    url: http://nginx:8084
 spring:
   security:
     oauth2:
       client:
         registration:
-          transactions-api:
-            client-id: client-app1
-            client-authentication-method: none
+          keycloak:
+            client-id: frontend-client
+            client-secret: your-client-secret-here
+            client-authentication-method: client_secret_post
             authorization-grant-type: authorization_code
-            redirect-uri: "http://${domain}:8082/login/oauth2/code/transactions-api"
-            scope: read,write
-            client-name: Transactions API Client
+            redirect-uri: http://${domain}:8083/login/oauth2/code/keycloak
+            scope: openid,profile,email
+            client-name: Keycloak Client
         provider:
-          transactions-api:
-            authorization-uri: http://${domain}:9000/oauth2/authorize
-            token-uri: ${auth.server.url}/oauth2/token
+          keycloak:
+            authorization-uri: http://${domain}:8084/realms/what-if/protocol/openid-connect/auth
+            token-uri: ${auth.server.url}/realms/what-if/protocol/openid-connect/token
+            user-info-uri: ${auth.server.url}/realms/what-if/protocol/openid-connect/userinfo
+            jwk-set-uri: ${auth.server.url}/realms/what-if/protocol/openid-connect/certs
+            user-name-attribute: sub
+            user-info-authentication-method: header
 server:
-  port: 8082
+  port: 8083
   servlet:
     session:
       timeout: 60m
@@ -34,5 +39,7 @@ server:
 logging:
   level:
     org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
     org.springframework.web: DEBUG
     org.springframework.session: DEBUG
+    com.example: DEBUG

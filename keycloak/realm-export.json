@@ -1,0 +1,42 @@
+{
+  "realm": "what-if",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "frontend-client",
+      "publicClient": false,
+      "clientAuthenticatorType": "client-secret",
+      "secret": "your-client-secret-here",
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "redirectUris": [
+        "http://localhost:8083/*",
+        "http://127.0.0.1:8083/*"
+      ],
+      "webOrigins": [
+        "http://localhost:8083",
+        "http://127.0.0.1:8083"
+      ],
+      "defaultClientScopes": [
+        "openid",
+        "profile",
+        "email"
+      ],
+      "optionalClientScopes": [],
+      "attributes": {}
+    }
+  ],
+  "identityProviders": [
+    {
+      "alias": "google",
+      "providerId": "google",
+      "enabled": true,
+      "config": {
+        "clientId": "802393106002-7p7isul04ms9nkdo46h0tepmlnogeudr.apps.googleusercontent.com",
+        "clientSecret": "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"
+      }
+    }
+  ]
+}

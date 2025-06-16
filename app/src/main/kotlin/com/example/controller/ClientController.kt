@@ -26,7 +26,7 @@ class ClientController(
 
     @GetMapping("/protected")
     override fun protectedPage(
-            @RegisteredOAuth2AuthorizedClient("transactions-api") authorizedClient: OAuth2AuthorizedClient
+            @RegisteredOAuth2AuthorizedClient("keycloak") authorizedClient: OAuth2AuthorizedClient
     ): ModelAndView {
         val accessToken = authorizedClient.accessToken.tokenValue
         val headers = HttpHeaders().apply { setBearerAuth(accessToken) }
@@ -44,7 +44,7 @@ class ClientController(
     override fun createAccount(
             @Parameter(description = "Валюта счёта (USD, EUR, RUB)", required = true)
             @RequestParam currency: String,
-            @RegisteredOAuth2AuthorizedClient("transactions-api") authorizedClient: OAuth2AuthorizedClient
+            @RegisteredOAuth2AuthorizedClient("keycloak") authorizedClient: OAuth2AuthorizedClient
     ): String {
         val accessToken = authorizedClient.accessToken.tokenValue
         log.info("Access Token for create-account: {}", accessToken)
@@ -66,7 +66,7 @@ class ClientController(
             @RequestParam accountId: Long,
             @Parameter(description = "Сумма для пополнения", required = true)
             @RequestParam amount: BigDecimal,
-            @RegisteredOAuth2AuthorizedClient("transactions-api") authorizedClient: OAuth2AuthorizedClient
+            @RegisteredOAuth2AuthorizedClient("keycloak") authorizedClient: OAuth2AuthorizedClient
     ): String {
         val accessToken = authorizedClient.accessToken.tokenValue
         val headers = HttpHeaders().apply {
@@ -86,7 +86,7 @@ class ClientController(
             @RequestParam accountId: Long,
             @Parameter(description = "Сумма для снятия", required = true)
             @RequestParam amount: BigDecimal,
-            @RegisteredOAuth2AuthorizedClient("transactions-api") authorizedClient: OAuth2AuthorizedClient
+            @RegisteredOAuth2AuthorizedClient("keycloak") authorizedClient: OAuth2AuthorizedClient
     ): String {
         val accessToken = authorizedClient.accessToken.tokenValue
         val headers = HttpHeaders().apply {
@@ -104,7 +104,7 @@ class ClientController(
     override fun getBalance(
             @Parameter(description = "ID счёта", required = true)
             @RequestParam accountId: Long,
-            @RegisteredOAuth2AuthorizedClient("transactions-api") authorizedClient: OAuth2AuthorizedClient
+            @RegisteredOAuth2AuthorizedClient("keycloak") authorizedClient: OAuth2AuthorizedClient
     ): ModelAndView {
         val accessToken = authorizedClient.accessToken.tokenValue
         val headers = HttpHeaders().apply { setBearerAuth(accessToken) }

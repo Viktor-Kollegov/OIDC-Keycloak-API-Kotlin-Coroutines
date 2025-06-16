@@ -1,0 +1,25 @@
+db:
+  domain: postgres
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${KEYCLOAK_ISSUER_URI}
+  r2dbc:
+    url: r2dbc:postgresql://${db.domain}:5432/resourcedb
+    username: postgres
+    password: postgres
+server:
+  port: 8082
+logging:
+  level:
+    org.springframework.r2dbc.connection: DEBUG
+    io.r2dbc.postgresql: DEBUG
+    org.springframework.data.r2dbc: DEBUG
+    org.springframework.transaction: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.session: DEBUG
+    org.springframework.context.annotation: DEBUG
+    com.example: DEBUG
