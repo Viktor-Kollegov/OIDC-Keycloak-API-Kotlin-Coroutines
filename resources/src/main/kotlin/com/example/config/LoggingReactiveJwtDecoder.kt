@@ -13,8 +13,7 @@ class LoggingReactiveJwtDecoder(private val delegate: NimbusReactiveJwtDecoder) 
     override fun decode(token: String): Mono<Jwt> {
         return delegate.decode(token)
                 .doOnNext { jwt ->
-                    log.debug("Decoded JWT token: {}", jwt)
-                    log.debug("Token claims: {}", jwt.claims)
+                    log.debug("Decoded JWT token claims: {}", jwt.claims)
                 }
     }
 }

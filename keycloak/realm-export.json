@@ -25,7 +25,48 @@
         "email"
       ],
       "optionalClientScopes": [],
-      "attributes": {}
+      "attributes": {},
+      "protocolMappers": [
+        {
+          "name": "sub",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "id",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "sub",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "preferred_username",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "username",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "preferred_username",
+            "jsonType.label": "String"
+          }
+        },
+        {
+          "name": "email",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "email",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "claim.name": "email",
+            "jsonType.label": "String"
+          }
+        }
+      ]
     }
   ],
   "identityProviders": [
@@ -36,7 +77,41 @@
       "config": {
         "clientId": "802393106002-7p7isul04ms9nkdo46h0tepmlnogeudr.apps.googleusercontent.com",
         "clientSecret": "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"
-      }
+      },
+      "mappers": [
+        {
+          "identityProviderMapper": "oidc-user-attribute-idp-mapper",
+          "config": {
+            "syncMode": "INHERIT",
+            "user.attribute": "email",
+            "claim": "email"
+          }
+        },
+        {
+          "identityProviderMapper": "oidc-user-attribute-idp-mapper",
+          "config": {
+            "syncMode": "INHERIT",
+            "user.attribute": "firstName",
+            "claim": "given_name"
+          }
+        },
+        {
+          "identityProviderMapper": "oidc-user-attribute-idp-mapper",
+          "config": {
+            "syncMode": "INHERIT",
+            "user.attribute": "lastName",
+            "claim": "family_name"
+          }
+        },
+        {
+          "identityProviderMapper": "oidc-user-attribute-idp-mapper",
+          "config": {
+            "syncMode": "INHERIT",
+            "user.attribute": "username",
+            "claim": "preferred_username"
+          }
+        }
+      ]
     }
   ]
 }
