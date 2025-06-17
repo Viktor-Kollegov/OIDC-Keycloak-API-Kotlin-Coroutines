@@ -13,6 +13,7 @@ echo -e "${GREEN}Building the project...${NC}"
 
 ./gradlew clean build -x test || error_exit "Build failed."
 
+docker-compose down
 echo -e "${GREEN}Starting Docker Compose...${NC}"
 docker-compose up --build || error_exit "Docker Compose failed."
 
