@@ -39,7 +39,7 @@ class SecurityConfig(
     fun jwtDecoder(): ReactiveJwtDecoder {
         val decoder = NimbusReactiveJwtDecoder(jwkSetUrl)
         decoder.setJwtValidator(MultiIssuerJwtValidator(allowedIssuersString.split(",")))
-        return decoder
+        return LoggingReactiveJwtDecoder(decoder)
     }
 
 }

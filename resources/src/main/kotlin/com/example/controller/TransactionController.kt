@@ -30,6 +30,7 @@ class TransactionController(
             @AuthenticationPrincipal jwt: Jwt
     ): ResponseEntity<Account> {
         val userId = jwt.subject
+        log.debug("Creating account for user $userId")
         val account = Account(userId = userId, currency = request.currency)
         val saved = accountRepository.save(account)
         return ResponseEntity.ok(saved)
@@ -41,6 +42,7 @@ class TransactionController(
             @RequestBody amount: BigDecimal,
             @AuthenticationPrincipal jwt: Jwt
     ): ResponseEntity<Void> {
+        log.debug("Depositing account's {} amount {}", accountId, amount)
         transactionService.deposit(accountId, amount, jwt.subject)
         return ResponseEntity.ok().build()
     }
@@ -51,6 +53,7 @@ class TransactionController(
             @RequestBody amount: BigDecimal,
             @AuthenticationPrincipal jwt: Jwt
     ): ResponseEntity<Void> {
+        log.debug("Withdrawing account's {} amount {}", accountId, amount)
         transactionService.withdraw(accountId, amount, jwt.subject)
         return ResponseEntity.ok().build()
     }
@@ -61,6 +64,7 @@ class TransactionController(
             @AuthenticationPrincipal jwt: Jwt
     ): ResponseEntity<Map<String, Any>> {
         val userId = jwt.subject
+        log.debug("Acquiring user's $userId account $accountId balance")
         val account = accountRepository.findById(accountId) ?: throw NoSuchElementException("Счет не найден")
 
         if (account.userId != userId) {
