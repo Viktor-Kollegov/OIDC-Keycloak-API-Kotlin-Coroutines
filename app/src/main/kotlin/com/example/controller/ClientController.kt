@@ -1,6 +1,7 @@
 package com.example.controller
 
 import com.example.controller.api.ClientControllerApi
+import com.example.dto.AccountCreationRequest
 import io.swagger.v3.oas.annotations.Parameter
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -52,7 +53,7 @@ class ClientController(
             setBearerAuth(accessToken)
             contentType = MediaType.APPLICATION_JSON
         }
-        val body = mapOf("currency" to currency)
+        val body = AccountCreationRequest(currency)
         val request = HttpEntity(body, headers)
         restTemplate.exchange(
                 "$resourceServerUrl/api/accounts", HttpMethod.POST, request, Void::class.java
