@@ -64,6 +64,7 @@ class TransactionServiceImpl(
     }
 
     override suspend fun calculateBalance(accountId: Long): BigDecimal {
-        return transactionRepository.sumAmountsByAccountId(accountId).awaitFirst()
+        val lock = locks.computeIfAbsent(accountId) { Mutex() }
+        return lock.withLock { transactionRepository.sumAmountsByAccountId(accountId).awaitFirst() }
     }
 }

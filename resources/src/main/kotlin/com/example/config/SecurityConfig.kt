@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders
 import org.springframework.security.web.server.SecurityWebFilterChain
 
 
@@ -20,14 +19,17 @@ class SecurityConfig(
 ) {
 
     @Bean
-    fun securityFilterChain(http: ServerHttpSecurity): SecurityWebFilterChain {
+    fun securityFilterChain(
+            @Qualifier("multiIssuerNimbusReactiveJwtDecoder")
+            jwtDecoder: ReactiveJwtDecoder,
+            http: ServerHttpSecurity): SecurityWebFilterChain {
         return http
                 .authorizeExchange {
                     it.pathMatchers("/api/**").authenticated()
                             .anyExchange().permitAll()
                 }
                 .oauth2ResourceServer { rs ->
-                    rs.jwt { jwt -> jwt.jwtDecoder(jwtDecoder()) }
+                    rs.jwt { jwt -> jwt.jwtDecoder(jwtDecoder) }
                 }
                 .build()
     }
