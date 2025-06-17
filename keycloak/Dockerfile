@@ -1,5 +1,5 @@
 FROM quay.io/keycloak/keycloak:26.2.5-0
 USER root
-RUN microdnf install -y curl && microdnf clean all
+RUN apt-get update && apt-get install -y curl && apt-get clean
 USER keycloak
 CMD ["start-dev", "--import-realm"]
