@@ -1,3 +1,5 @@
 package com.example.dto
 
-data class AccountCreationRequest(val currency: String)
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class AccountCreationRequest(@JsonProperty("currency") val currency: String)

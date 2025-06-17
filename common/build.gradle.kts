@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc:3.3.0")
     implementation(kotlin("stdlib-jdk8"))
 }

@@ -31,7 +31,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
     testImplementation("io.r2dbc:r2dbc-h2")
     implementation(kotlin("stdlib-jdk8"))
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
 }
 
 tasks.test {

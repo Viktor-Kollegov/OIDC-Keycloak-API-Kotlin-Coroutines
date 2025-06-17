@@ -20,7 +20,7 @@ dependencies {
     }
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     implementation("org.postgresql:postgresql:42.7.2")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.19.0")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.3")
     implementation(kotlin("stdlib-jdk8"))
 }
 repositories {
