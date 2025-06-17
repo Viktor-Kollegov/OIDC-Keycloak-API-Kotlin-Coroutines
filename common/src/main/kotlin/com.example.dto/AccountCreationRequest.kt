@@ -1,3 +1,3 @@
 package com.example.dto
 
-class AccountCreationRequest(val currency: String)
+data class AccountCreationRequest(val currency: String)
