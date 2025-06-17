@@ -1,9 +1,11 @@
 package com.example.config
 
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.web.server.ServerHttpSecurity
+import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder
 import org.springframework.security.oauth2.jwt.ReactiveJwtDecoders
 import org.springframework.security.web.server.SecurityWebFilterChain
@@ -11,8 +13,10 @@ import org.springframework.security.web.server.SecurityWebFilterChain
 
 @Configuration
 class SecurityConfig(
-        @Value("\${spring.security.oauth2.resourceserver.jwt.issuer-uri}")
-        private val issuerUri: String
+        @Value("\${keycloak.issuer.jwkSetUrl}")
+        private val jwkSetUrl: String,
+        @Value("\${keycloak.issuer.allowedIssuers}")
+        private val allowedIssuersString: String
 ) {
 
     @Bean
@@ -29,8 +33,11 @@ class SecurityConfig(
     }
 
     @Bean
+    @Qualifier("multiIssuerNimbusReactiveJwtDecoder")
     fun jwtDecoder(): ReactiveJwtDecoder {
-        return ReactiveJwtDecoders.fromIssuerLocation(issuerUri)
+        val decoder = NimbusReactiveJwtDecoder(jwkSetUrl)
+        decoder.setJwtValidator(MultiIssuerJwtValidator(allowedIssuersString.split(",")))
+        return decoder
     }
 
 }

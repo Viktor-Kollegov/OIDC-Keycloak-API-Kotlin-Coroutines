@@ -6,7 +6,7 @@ import org.springframework.security.oauth2.core.OAuth2TokenValidatorResult
 import org.springframework.security.oauth2.jwt.Jwt
 
 
-class MultiIssuerJwtValidator(private val allowedIssuers: Set<String>) : OAuth2TokenValidator<Jwt> {
+class MultiIssuerJwtValidator(private val allowedIssuers: List<String>) : OAuth2TokenValidator<Jwt> {
     override fun validate(jwt: Jwt): OAuth2TokenValidatorResult {
         val issuer = jwt.getClaimAsString("iss")
         return if (issuer == null || !allowedIssuers.contains(issuer)) {

@@ -20,7 +20,7 @@ spring:
             client-name: Keycloak Client
         provider:
           keycloak:
-            authorization-uri: http://${domain}:8084/realms/what-if/protocol/openid-connect/auth
+            authorization-uri: http://${domain}:8080/realms/what-if/protocol/openid-connect/auth
             token-uri: ${auth.server.url}/realms/what-if/protocol/openid-connect/token
             user-info-uri: ${auth.server.url}/realms/what-if/protocol/openid-connect/userinfo
             jwk-set-uri: ${auth.server.url}/realms/what-if/protocol/openid-connect/certs
