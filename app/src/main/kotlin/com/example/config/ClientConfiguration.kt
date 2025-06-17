@@ -2,6 +2,8 @@ package com.example.config
 
 import com.example.service.CustomOAuth2UserService
 import com.example.service.CustomOidcUserService
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -15,6 +17,11 @@ import org.springframework.web.client.RestTemplate
 
 @Configuration
 class ClientConfiguration {
+
+    @Bean
+    fun objectMapper(): ObjectMapper {
+        return ObjectMapper().registerModule(KotlinModule.Builder().build())
+    }
 
     @Bean
     @Qualifier("loggedRestTemplate")
