@@ -1,2 +1,3 @@
 CREATE DATABASE resourcedb;
 CREATE DATABASE authdb;
+CREATE DATABASE keycloak;

@@ -1,6 +1,29 @@
 {
   "realm": "what-if",
   "enabled": true,
+  "registrationAllowed": true,
+  "registrationEmailAsUsername": false,
+  "editUsernameAllowed": false,
+  "resetPasswordAllowed": false,
+  "rememberMe": true,
+  "verifyEmail": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "smtpServer": {
+    "host": "smtp.example.com",
+    "port": "587",
+    "from": "noreply@example.com",
+    "fromDisplayName": "Keycloak",
+    "replyTo": "reply@example.com",
+    "replyToDisplayName": "Reply To",
+    "envelopeFrom": "bounce@example.com",
+    "auth": "false",
+    "starttls": "false",
+    "ssl": "false",
+    "user": "your-smtp-username",
+    "password": "your-smtp-password"
+  },
+  "emailTheme": "my-custom-theme",
   "clients": [
     {
       "clientId": "frontend-client",
