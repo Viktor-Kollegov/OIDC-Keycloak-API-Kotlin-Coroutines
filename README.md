@@ -1,12 +1,12 @@
-## PKCE OAuth 2.0 Transactions API
+## OIDC OAuth 2.0 Transactions API
 
 List and description of endpoints:
-1) Resource server: http://127.0.0.1:8081/webjars/swagger-ui/index.html
-2) Client application: http://127.0.0.1:8082/swagger-ui/index.html
+1) Resource server: http://127.0.0.1:8082/webjars/swagger-ui/index.html
+2) Client application: http://127.0.0.1:8083/swagger-ui/index.html
 
 To launch all three applications in Docker containers, use the script ./build-and-run.sh 
 
-Start page: http://127.0.0.1:8082/
+Start page: http://127.0.0.1:8083/
 
 
 
