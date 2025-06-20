@@ -6,7 +6,7 @@ List and description of endpoints:
 
 To launch all three applications in Docker containers, use the script ./build-and-run.sh 
 
-Start page: http://127.0.0.1:8083/
+Starting page: http://127.0.0.1:8083/
 
 
 
